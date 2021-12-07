@@ -71,7 +71,7 @@ describe("Testing the app endpoints", () => {
     expect(response.status).toBe(204);
   });
 
-  afterAll((done) => {
+  /*  afterAll((done) => {
     mongoose.connection.dropDatabase().then(() => {
       console.log("DB dropped");
 
@@ -79,9 +79,9 @@ describe("Testing the app endpoints", () => {
         done();
       });
     });
-  });
+  }); */
 
-  /*  afterAll((done) => {
+  afterAll((done) => {
     mongoose.connection
       .dropDatabase()
       .then(() => {
@@ -90,7 +90,7 @@ describe("Testing the app endpoints", () => {
       .then(() => {
         done();
       });
-  }); */
+  });
 
   // it("should test that the GET /products endpoint returns a list of products", async () => {})
 });
