@@ -58,6 +58,23 @@ describe("Testing the app endpoints", () => {
     expect(response.body.length).toBeGreaterThan(0);
   });
 
+  it("should check that the GET/products endpoint is returning a product with the specific id", async () => {
+    const response = await request.post("/products").send(validProduct);
+
+    expect(response.status).toBe(201);
+    expect(response.body.name).toBe(validProduct.name);
+
+    const _id = response.body._id;
+
+    const getResponse = await request.get(`/products/${_id}`);
+    expect(getResponse.body.name).toBe(validProduct.name);
+  });
+
+  it("should check that the DELETE/products endpoint is returning status code of 204 when a product is deleted", async () => {
+    const getResponse = await request.delete(`/products/${_id}`);
+    expect(getResponse.status).toBe(204);
+  });
+
   afterAll((done) => {
     mongoose.connection
       .dropDatabase()
@@ -68,20 +85,4 @@ describe("Testing the app endpoints", () => {
         done();
       });
   });
-
-
-    it("should check that the GET/products endpoint is returning a product with the specific id", async () => {
-        const response = await request.post("/products").send(validProduct)
-
-        expect(response.status).toBe(201)
-        expect(response.body.name).toBe(validProduct.name)
-
-        const _id = response.body._id
-
-        const getResponse = await request.get(`/products/${_id}`)
-        expect(getResponse.body.name).toBe(validProduct.name)
-
-    })
-
-
 });
