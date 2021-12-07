@@ -8,11 +8,11 @@ productsRouter
         const products = await ProductModel.find({})
         res.send(products)
     })
-    .post("/", async (req, res) => {
-        const product = new ProductModel(req.body)
-        await product.save()
-        res.status(201).send(product)
-    })
+    // .post("/", async (req, res) => {
+    //     const product = new ProductModel(req.body)
+    //     await product.save()
+    //     res.status(201).send(product)
+    // })
 
 productsRouter.get('/:id', async (req, res) => {
     try {
