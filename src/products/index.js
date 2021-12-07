@@ -35,4 +35,20 @@ productsRouter.post('/', async (req, res) => {
     }
 })
 
+productsRouter.put('/:id', async (req, res) => {
+    try {
+
+        const updatedProduct = await ProductModel.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+        if (updatedProduct){
+            res.send(updatedProduct)
+        } else {
+            console.log(req.params.id);
+            res.status(404).send()
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(404).send()
+    }
+})
+
 export default productsRouter
