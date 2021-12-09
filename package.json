@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
-    "dev": "nodemon -r dotenv/config ./src/index.js",
-    "start": "node ./src/index.js"
+    "test": " jest",
+    "watch": " jest --watchAll",
+    "dev": "ts-node-dev ./src/index",
+    "start": "node ./src/index"
   },
   "keywords": [],
   "author": "",
@@ -20,10 +19,15 @@
     "mongoose": "^6.0.15"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.3",
+    "@types/supertest": "^2.0.11",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "jest": "^27.4.3",
     "nodemon": "^2.0.15",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.2"
   }
 }

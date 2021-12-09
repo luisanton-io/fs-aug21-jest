@@ -1,5 +1,5 @@
 import express from "express";
-import { ProductModel } from "./model.js";
+import { ProductModel } from "./model";
 
 const productsRouter = express.Router();
 
@@ -22,10 +22,11 @@ productsRouter
       req.body,
       { new: true }
     );
-    if (product) {
-      res.status(203).send(product);
+
+    if (!product) {
+      res.status(404).send();
     } else {
-      res.status(404).send({ message: "Product id not available" });
+      res.send(product);
     }
   })
   .get("/:id", async (req, res) => {

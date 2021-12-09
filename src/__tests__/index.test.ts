@@ -17,7 +17,7 @@ describe("Testing the app endpoints", () => {
   beforeAll((done) => {
     console.log("This gets run before all tests in this suite");
 
-    mongoose.connect(process.env.MONGO_URL_TEST).then(() => {
+    mongoose.connect(process.env.MONGO_URL_TEST!).then(() => {
       console.log("Connected to the test database");
       done();
     });
@@ -35,14 +35,17 @@ describe("Testing the app endpoints", () => {
     price: 200,
   };
 
-  let _id;
+  let _id : string;
+
   it("should check that the POST /products endpoint creates a new product", async () => {
     const response = await request.post("/products").send(validProduct);
-    _id = response.body._id;
+
     expect(response.status).toBe(201);
     expect(response.body._id).toBeDefined();
     expect(response.body.name).toBeDefined();
     expect(response.body.price).toBeDefined();
+
+    _id = response.body._id;
   });
 
   it("should check that the GET /products endpoint returns a list of products", async () => {
@@ -52,50 +55,50 @@ describe("Testing the app endpoints", () => {
     expect(response.body.length).toBeGreaterThan(0);
   });
 
-  it("should check that GET /products/:id gives back a correct product with a valid id", async () => {
-    const response = await request.get("/products/" + _id);
+  it("should check that the GET /products/:id returns a valid product with a valid id", async () => {
+    const response = await request.get(`/products/${_id}`);
 
     expect(response.status).toBe(200);
-    expect(response.body._id).toBeDefined();
-    expect(response.body.name).toBeDefined();
-    expect(response.body.price).toBeDefined();
+    expect(response.body._id).toBe(_id);
+    expect(response.body.name).toBe(validProduct.name);
+    expect(response.body.price).toBe(validProduct.price);
   });
 
-  it("should check that PUT /products/:id gives back a new product with a valid id", async () => {
-    const response = await request.put("/products/" + _id).send({
-      name: "Test Product Updated",
-      price: 300,
-    });
+  it("should check that the GET /products/:id returns a 404 without a valid id", async () => {
+    const response = await request.get(`/products/999999999999999999999999`);
 
-    expect(response.status).toBe(203);
-    expect(response.body._id).toBeDefined();
-    expect(response.body.name).toBe("Test Product Updated");
-    expect(response.body.price).toBe(300);
+    expect(response.status).toBe(404);
   });
 
-  it("should check that DELETE /products/:id deletes a product", async () => {
-    const response = await request.delete("/products/" + _id).send({});
+  const validUpdate = {
+    name: "Test Product Updated",
+  };
 
+  it("should check that a valid PUT /products/:id update request gets executed correctly", async () => {
+    const response = await request.put(`/products/${_id}`).send(validUpdate);
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe(validUpdate.name);
+    expect(typeof response.body.name).toBe("string");
+  });
+  it("should check that a valid PUT /products/:id update request gets 404 on an invalid ID", async () => {
+    const response = await request
+      .put(`/products/444444444444444444444444`)
+      .send(validUpdate);
+
+    expect(response.status).toBe(404);
+  });
+
+  it("should check that the DELETE /products/:id returns a valid product with a valid id", async () => {
+    const response = await request.delete(`/products/${_id}`);
     expect(response.status).toBe(204);
+
+    const deleteProductResponse = await request.get(`/products/${_id}`);
+    expect(deleteProductResponse.status).toBe(404);
   });
 
-  it("should check that the GET /products/:id endpoint returns a 404 error when the product does not exist", async () => {
-    const response = await request.get(`/products/` + _id);
-
-    expect(response.status).toBe(404);
-  });
-
-  it("should check that the PUT /products/:id endpoint returns a 404 error when the product does not exist", async () => {
-    const response = await request.put(`/products/` + _id).send({
-      name: "Test Product Updated",
-      price: 300,
-    });
-
-    expect(response.status).toBe(404);
-  });
-
-  it("should check that the DELETE /products/:id endpoint returns a 404 error when the product does not exist", async () => {
-    const response = await request.delete(`/products/` + _id);
+  it("should check that the DELETE /products/:id returns a 404 without a valid id", async () => {
+    const response = await request.delete(`/products/999999999999999999999999`);
 
     expect(response.status).toBe(404);
   });
