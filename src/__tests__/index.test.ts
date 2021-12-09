@@ -58,7 +58,7 @@ describe("Testing the app endpoints", () => {
   it("should check that the GET /products/:id returns a valid product with a valid id", async () => {
     const response = await request.get(`/products/${_id}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(404);
     expect(response.body._id).toBe(_id);
     expect(response.body.name).toBe(validProduct.name);
     expect(response.body.price).toBe(validProduct.price);
